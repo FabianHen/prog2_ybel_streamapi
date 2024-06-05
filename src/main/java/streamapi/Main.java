@@ -73,8 +73,13 @@ public class Main {
      * @return An open {@link InputStream} for the resource file
      */
     private static InputStream getResourceAsStream(String path) {
-        // TODO
-        throw new UnsupportedOperationException();
+        InputStream inputStream = Main.class.getResourceAsStream("/streamapi/" + path);
+        if (inputStream == null) {
+            System.out.println("Resource not found: " + path);
+        } else {
+            System.out.println("Resource found and opened as InputStream: " + path);
+        }
+        return inputStream;
     }
 
     /**
