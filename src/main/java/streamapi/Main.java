@@ -4,8 +4,12 @@ import java.util.stream.IntStream;
 
 import java.util.stream.Collectors;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /** Starter for the stream api task. */
 public class Main {
@@ -40,7 +44,7 @@ public class Main {
         System.out.println(random());
 
         // Task IV+V: Resources
-
+        System.out.println(resources("file.txt"));
     }
 
     /**
@@ -104,8 +108,13 @@ public class Main {
      * @return An open {@link InputStream} for the resource file
      */
     private static InputStream getResourceAsStream(String path) {
-        // TODO
-        throw new UnsupportedOperationException();
+        InputStream inputStream = Main.class.getResourceAsStream("/streamapi/" + path);
+        if (inputStream == null) {
+            System.out.println("Resource not found: " + path);
+        } else {
+            System.out.println("Resource found and opened as InputStream: " + path);
+        }
+        return inputStream;
     }
 
     /**
@@ -119,7 +128,20 @@ public class Main {
      * @return String of all matching lines, separated by {@code "\n"}
      */
     public static String resources(String path) {
-        // TODO
-        throw new UnsupportedOperationException();
+        try (InputStream stream = getResourceAsStream(path)) {
+            if (stream == null) {
+                return "";
+            }
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+
+            return reader.lines()
+                .skip(1)
+                .filter(line -> line.startsWith("a") && line.length() >= 2)
+                .collect(Collectors.joining("\n"));
+        } catch (IOException e) {
+            System.err.println("Ouch, that didn't work: \n" + e.getMessage());
+            return "";
+        }
     }
 }
